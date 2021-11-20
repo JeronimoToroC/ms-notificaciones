@@ -19,30 +19,30 @@ def hello():
 
 @app.route("/email")
 def enviarCorreo():
-    
     hashString = request.args.get("hash")
-    if (hashString == os.environ.get('SECURITY_HASH')):
-    
-        destino = request.args.get("correo_destino")
-        asunto = request.args.get("asunto")
-        mensaje = request.args.get("contenido")
+    print(hashString)
+    if(hashString == os.environ.get('SECURITY_HASH')):
         
+        destino = request.args.get("email")
+        asunto = request.args.get("asunto")
+        mensaje = request.args.get("mensaje")
         message = Mail(
-        from_email='cristian.1701911410@ucaldas.edu.co',
+        from_email='halfonsom326@gmail.com',
         to_emails=destino,
         subject=asunto,
-        html_content=mensaje)
+        html_content=mensaje)        
         try:
             sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
             response = sg.send(message)
             print("Enviado")
-            return "ok"
+            return "OK"
         except Exception as e:
             print(e.message)
-            return "ko"
+            return "KO";
     else:
-        print("sin hash")
+        print("Sin hash")
         return "hash error"
+
         
 @app.route("/sms")
 def enviarSms():
@@ -50,7 +50,6 @@ def enviarSms():
     if(hashString == os.environ.get('SECURITY_HASH')):
         destino = request.args.get("destino")
         mensaje = request.args.get("mensaje")
-        
         try:
             account_sid = os.environ["TWILIO_ACCOUNT_SID"]
             auth_token = os.environ["TWILIO_AUTH_TOKEN"]
@@ -59,8 +58,8 @@ def enviarSms():
             message = client.messages \
                             .create(
                                  body=mensaje,
-                                 from_="+18648033077",
-                                 to="+" + destino
+                                 from_="+12053080705",
+                                 to="+57"+destino
                              )
             
             print(message.sid)
